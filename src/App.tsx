@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
 import Lenis from "lenis";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Layout from "@/components/Layout";
@@ -62,7 +62,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <HashRouter>
         <SmoothScroll />
         <Routes>
           <Route element={<Layout />}>
@@ -80,7 +80,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }

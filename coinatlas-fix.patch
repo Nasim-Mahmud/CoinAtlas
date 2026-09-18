@@ -1,0 +1,812 @@
+From 2dd4e370b55ee633aeef8dd387d891d6568be183 Mon Sep 17 00:00:00 2001
+From: CoinAtlas Fix <fix@coinatlas.local>
+Date: Fri, 18 Sep 2026 14:12:54 +0800
+Subject: [PATCH] Fix asset paths for subpath hosting, logo link, scan UX
+ overlaps, single-side identification
+
+---
+ .gitignore                              |  4 ++
+ index.html                              |  2 +-
+ src/App.tsx                             |  6 +--
+ src/components/EmptyState.tsx           |  3 +-
+ src/components/Footer.tsx               |  3 +-
+ src/components/MobileNav.tsx            |  9 +++--
+ src/components/Navbar.tsx               |  7 ++--
+ src/components/coin/CoinImage.tsx       | 11 ++---
+ src/components/collection/EntryCard.tsx |  3 +-
+ src/components/detail/CoinStage.tsx     |  9 +++--
+ src/components/form/LabelPreview.tsx    |  3 +-
+ src/components/home/CabinetStory.tsx    |  3 +-
+ src/components/reference/Grading.tsx    |  3 +-
+ src/components/scan/UploadWell.tsx      |  2 +-
+ src/components/scan/Viewfinder.tsx      | 11 ++---
+ src/lib/asset.ts                        | 18 +++++++++
+ src/lib/db.ts                           | 49 +++++++++++-----------
+ src/lib/identify.ts                     |  3 +-
+ src/pages/About.tsx                     |  7 ++--
+ src/pages/Home.tsx                      | 15 +++----
+ src/pages/Scan.tsx                      | 54 ++++++++++++-------------
+ 21 files changed, 131 insertions(+), 94 deletions(-)
+ create mode 100644 .gitignore
+ create mode 100644 src/lib/asset.ts
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 00000000..b518b92f
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,4 @@
++node_modules/
++dist/
++*.local
++.DS_Store
+diff --git a/index.html b/index.html
+index ba9be9ab..6a5d0d7a 100644
+--- a/index.html
++++ b/index.html
+@@ -3,7 +3,7 @@
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
++    <link rel="icon" type="image/svg+xml" href="./logo.svg" />
+     <meta name="description" content="Numisma — a personal numismatic cabinet. Catalogue your coin collection with museum-grade records, entirely in your browser." />
+     <title>Numisma — Personal Numismatic Collection</title>
+     <link rel="preconnect" href="https://fonts.googleapis.com" />
+diff --git a/src/App.tsx b/src/App.tsx
+index 648164ba..f1f1a627 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,5 @@
+ import { useEffect, useRef } from "react";
+-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
++import { HashRouter, Route, Routes, useLocation } from "react-router-dom";
+ import Lenis from "lenis";
+ import { ThemeProvider } from "@/components/ThemeProvider";
+ import Layout from "@/components/Layout";
+@@ -62,7 +62,7 @@ export default function App() {
+ 
+   return (
+     <ThemeProvider>
+-      <BrowserRouter>
++      <HashRouter>
+         <SmoothScroll />
+         <Routes>
+           <Route element={<Layout />}>
+@@ -80,7 +80,7 @@ export default function App() {
+             <Route path="*" element={<NotFound />} />
+           </Route>
+         </Routes>
+-      </BrowserRouter>
++      </HashRouter>
+     </ThemeProvider>
+   );
+ }
+diff --git a/src/components/EmptyState.tsx b/src/components/EmptyState.tsx
+index 1032e601..d36ca12d 100644
+--- a/src/components/EmptyState.tsx
++++ b/src/components/EmptyState.tsx
+@@ -1,4 +1,5 @@
+ import type { ReactNode } from "react";
++import { asset } from "@/lib/asset";
+ import { Link } from "react-router-dom";
+ import { cn } from "@/lib/utils";
+ import { SvgMask } from "@/components/coin/CoinImage";
+@@ -22,7 +23,7 @@ export interface EmptyStateProps {
+ export default function EmptyState({ headline, body, cta, secondaryCta, actions, className }: EmptyStateProps) {
+   return (
+     <div className={cn("flex flex-col items-center px-6 py-16 text-center", className)}>
+-      <SvgMask src="/empty-coin.svg" className="size-32 text-ink-faint opacity-80" />
++      <SvgMask src={asset("/empty-coin.svg")} className="size-32 text-ink-faint opacity-80" />
+       <h2 className="mt-6 font-display text-[22px] font-medium text-ink">{headline}</h2>
+       {body && <p className="mt-2 max-w-[46ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim">{body}</p>}
+       {actions ? (
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index a544d8ab..5ec7dd46 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -1,3 +1,4 @@
++import { asset } from "@/lib/asset";
+ import { Link } from "react-router-dom";
+ import { Lock } from "lucide-react";
+ import { useCoinCount } from "@/hooks/useCoins";
+@@ -23,7 +24,7 @@ export default function Footer() {
+         {/* 1 — wordmark + tagline */}
+         <div>
+           <Link to="/" className="flex items-center gap-2.5 text-brass">
+-            <SvgMask src="/logo.svg" className="size-6" />
++            <SvgMask src={asset("logo.svg")} className="size-6" />
+             <span className="font-display text-[18px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
+           </Link>
+           <p className="mt-3 max-w-[36ch] font-serif text-[15px] leading-[1.65] text-ink-dim">
+diff --git a/src/components/MobileNav.tsx b/src/components/MobileNav.tsx
+index 3dadf386..b69e82d3 100644
+--- a/src/components/MobileNav.tsx
++++ b/src/components/MobileNav.tsx
+@@ -1,8 +1,9 @@
+ import { useState } from "react";
+-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
++import { NavLink, useLocation, useNavigate } from "react-router-dom";
+ import { motion } from "framer-motion";
+ import { BarChart3, BookOpen, Camera, Info, Layers, Menu, Moon, Plus, Sun } from "lucide-react";
+ import { cn } from "@/lib/utils";
++import { asset } from "@/lib/asset";
+ import { useTheme } from "@/components/ThemeProvider";
+ import { openPalette } from "@/lib/palette";
+ import { SvgMask } from "@/components/coin/CoinImage";
+@@ -43,10 +44,10 @@ export default function MobileNav() {
+     <div className="lg:hidden">
+       {/* Top bar */}
+       <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-4 backdrop-blur-md">
+-        <Link to="/" className="flex items-center gap-2 text-brass" aria-label="Numisma — home">
+-          <SvgMask src="/logo.svg" className="size-5" />
++        <a href="https://nasim-mahmud.github.io/CoinAtlas/" className="flex items-center gap-2 text-brass" aria-label="CoinAtlas — home">
++          <SvgMask src={asset("logo.svg")} className="size-5" />
+           <span className="font-display text-[16px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
+-        </Link>
++        </a>
+         <div className="flex items-center gap-2">
+           <button
+             type="button"
+diff --git a/src/components/Navbar.tsx b/src/components/Navbar.tsx
+index 8fe803ee..449528e1 100644
+--- a/src/components/Navbar.tsx
++++ b/src/components/Navbar.tsx
+@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
+ import { useTheme } from "@/components/ThemeProvider";
+ import { useCoinCount } from "@/hooks/useCoins";
+ import { openPalette } from "@/lib/palette";
++import { asset } from "@/lib/asset";
+ import { pluralize } from "@/lib/format";
+ import { SvgMask } from "@/components/coin/CoinImage";
+ 
+@@ -75,10 +76,10 @@ export default function Navbar() {
+     >
+       <div className="mx-auto flex h-full max-w-[1240px] items-center justify-between gap-6 px-6">
+         {/* Wordmark */}
+-        <Link to="/" className="flex items-center gap-2.5 text-brass" aria-label="Numisma — home">
+-          <SvgMask src="/logo.svg" className="size-6" />
++        <a href="https://nasim-mahmud.github.io/CoinAtlas/" className="flex items-center gap-2.5 text-brass" aria-label="CoinAtlas — home">
++          <SvgMask src={asset("logo.svg")} className="size-6" />
+           <span className="font-display text-[18px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
+-        </Link>
++        </a>
+ 
+         {/* Center nav */}
+         <nav className="flex items-center gap-1" aria-label="Primary">
+diff --git a/src/components/coin/CoinImage.tsx b/src/components/coin/CoinImage.tsx
+index b556fe00..b1ab02cf 100644
+--- a/src/components/coin/CoinImage.tsx
++++ b/src/components/coin/CoinImage.tsx
+@@ -1,6 +1,7 @@
+ import { useState } from "react";
+ import type { CSSProperties } from "react";
+ import { cn } from "@/lib/utils";
++import { asset } from "@/lib/asset";
+ 
+ /**
+  * CoinImage — the signature component (design.md §5).
+@@ -18,8 +19,8 @@ export function SvgMask({ src, className, style }: { src: string; className?: st
+       aria-hidden
+       className={cn("inline-block shrink-0 bg-current", className)}
+       style={{
+-        WebkitMaskImage: `url("${src}")`,
+-        maskImage: `url("${src}")`,
++        WebkitMaskImage: `url("${asset(src)}")`,
++        maskImage: `url("${asset(src)}")`,
+         WebkitMaskSize: "contain",
+         maskSize: "contain",
+         WebkitMaskRepeat: "no-repeat",
+@@ -36,7 +37,7 @@ export function SvgMask({ src, className, style }: { src: string; className?: st
+ export function ReedRing({ className, spinning = true }: { className?: string; spinning?: boolean }) {
+   return (
+     <SvgMask
+-      src="/reed-ring.svg"
++      src={asset("reed-ring.svg")}
+       className={cn("pointer-events-none absolute -inset-2 text-brass", spinning && "animate-reed-spin", className)}
+     />
+   );
+@@ -61,14 +62,14 @@ function Face({
+           back && "coin-face-back",
+         )}
+       >
+-        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
++        <SvgMask src={asset("empty-coin.svg")} className="size-1/2 opacity-60" />
+       </div>
+     );
+   }
+   return (
+     <div className={cn("coin-face", back && "coin-face-back")}>
+       <img
+-        src={src}
++        src={asset(src)}
+         alt={alt}
+         loading="lazy"
+         draggable={false}
+diff --git a/src/components/collection/EntryCard.tsx b/src/components/collection/EntryCard.tsx
+index 7b289196..960bd445 100644
+--- a/src/components/collection/EntryCard.tsx
++++ b/src/components/collection/EntryCard.tsx
+@@ -1,4 +1,5 @@
+ import { useState } from "react";
++import { asset } from "@/lib/asset";
+ import { Link } from "react-router-dom";
+ import { motion } from "framer-motion";
+ import { Check, ChevronRight } from "lucide-react";
+@@ -64,7 +65,7 @@ function CardCoin({ coin, size = "card" }: { coin: Coin; size?: "card" | "row" }
+           back && "coin-face-back",
+         )}
+       >
+-        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
++        <SvgMask src={asset("/empty-coin.svg")} className="size-1/2 opacity-60" />
+       </div>
+     );
+ 
+diff --git a/src/components/detail/CoinStage.tsx b/src/components/detail/CoinStage.tsx
+index 25fdcd0b..33f7260a 100644
+--- a/src/components/detail/CoinStage.tsx
++++ b/src/components/detail/CoinStage.tsx
+@@ -1,4 +1,5 @@
+ import { useRef, useState } from "react";
++import { asset } from "@/lib/asset";
+ import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
+ import type { PanInfo } from "framer-motion";
+ import { FlipHorizontal2, ZoomIn } from "lucide-react";
+@@ -32,7 +33,7 @@ function StageImage({
+   if (!src || failed) {
+     return (
+       <div className={cn("flex items-center justify-center rounded-full bg-inset text-ink-faint", className)}>
+-        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
++        <SvgMask src={asset("/empty-coin.svg")} className="size-1/2 opacity-60" />
+       </div>
+     );
+   }
+@@ -109,7 +110,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
+         className="relative rounded-[16px] border border-line bg-inset p-8 sm:p-10"
+       >
+         <SvgMask
+-          src="/guilloche-pattern.svg"
++          src={asset("/guilloche-pattern.svg")}
+           className="pointer-events-none absolute inset-0 size-full rounded-[16px] text-ink opacity-[0.05]"
+           style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
+         />
+@@ -226,7 +227,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
+                   <img src={t.src} alt="" className="size-full object-cover" draggable={false} />
+                 ) : (
+                   <span className="grid size-full place-items-center bg-inset text-ink-faint">
+-                    <SvgMask src="/empty-coin.svg" className="size-2/3 opacity-60" />
++                    <SvgMask src={asset("/empty-coin.svg")} className="size-2/3 opacity-60" />
+                   </span>
+                 )}
+               </button>
+@@ -266,7 +267,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
+               />
+             ) : (
+               <div className="grid aspect-square w-full place-items-center rounded-full bg-bg-raised text-ink-faint">
+-                <SvgMask src="/empty-coin.svg" className="size-1/3 opacity-60" />
++                <SvgMask src={asset("/empty-coin.svg")} className="size-1/3 opacity-60" />
+               </div>
+             )}
+           </div>
+diff --git a/src/components/form/LabelPreview.tsx b/src/components/form/LabelPreview.tsx
+index b9f36a98..1f0ea8c5 100644
+--- a/src/components/form/LabelPreview.tsx
++++ b/src/components/form/LabelPreview.tsx
+@@ -1,4 +1,5 @@
+ import { useEffect, useRef, useState } from "react";
++import { asset } from "@/lib/asset";
+ import { motion } from "framer-motion";
+ import type { CoinFormValues } from "@/components/form/form-utils";
+ import { COMPLETENESS_FIELDS, countFilled } from "@/components/form/form-utils";
+@@ -65,7 +66,7 @@ export default function LabelPreview({ values, nextAccession }: { values: CoinFo
+               />
+             ) : (
+               <div className="flex size-full items-center justify-center rounded-full border border-dashed border-line-strong bg-bg-inset/50">
+-                <SvgMask src="/empty-coin.svg" className="size-10 text-ink-faint" />
++                <SvgMask src={asset("/empty-coin.svg")} className="size-10 text-ink-faint" />
+               </div>
+             )}
+           </div>
+diff --git a/src/components/home/CabinetStory.tsx b/src/components/home/CabinetStory.tsx
+index 8ff28df4..da9f729f 100644
+--- a/src/components/home/CabinetStory.tsx
++++ b/src/components/home/CabinetStory.tsx
+@@ -1,4 +1,5 @@
+ import { useRef, useState } from "react";
++import { asset } from "@/lib/asset";
+ import gsap from "gsap";
+ import { ScrollTrigger } from "gsap/ScrollTrigger";
+ import { useGSAP } from "@gsap/react";
+@@ -95,7 +96,7 @@ export default function CabinetStory() {
+         <div className="relative overflow-hidden rounded-[12px] border border-line">
+           <img
+             ref={imgRef}
+-            src="/home-cabinet.jpg"
++            src={asset("/home-cabinet.jpg")}
+             alt="Open walnut collector's cabinet drawer with coin trays in warm lamplight"
+             className="aspect-[16/10] w-full object-cover will-change-transform lg:aspect-auto lg:h-[68vh]"
+             loading="lazy"
+diff --git a/src/components/reference/Grading.tsx b/src/components/reference/Grading.tsx
+index 8cdd0fa8..2396d98e 100644
+--- a/src/components/reference/Grading.tsx
++++ b/src/components/reference/Grading.tsx
+@@ -1,4 +1,5 @@
+ import { useState } from "react";
++import { asset } from "@/lib/asset";
+ import { Info } from "lucide-react";
+ import { cn } from "@/lib/utils";
+ import { SvgMask } from "@/components/coin/CoinImage";
+@@ -27,7 +28,7 @@ export default function Grading({ query }: { query: string }) {
+       {/* Grading strip with hover stops */}
+       <div className="relative mt-8">
+         <SvgMask
+-          src="/ref-grading-strip.svg"
++          src={asset("/ref-grading-strip.svg")}
+           className="w-full text-bronze"
+           style={{ aspectRatio: "5 / 1" }}
+         />
+diff --git a/src/components/scan/UploadWell.tsx b/src/components/scan/UploadWell.tsx
+index 3441b105..b5350200 100644
+--- a/src/components/scan/UploadWell.tsx
++++ b/src/components/scan/UploadWell.tsx
+@@ -66,7 +66,7 @@ export default function UploadWell({ onFiles, className }: UploadWellProps) {
+         <p className="font-serif text-[16px] text-ink">Drop a photo or browse</p>
+         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">JPG · PNG · WEBP</p>
+         <p className="mt-2 font-mono text-[11px] leading-relaxed text-ink-faint">
+-          Pick two photos at once — they'll fill obverse then reverse.
++          One photo is enough — add a second and it'll fill the other side.
+         </p>
+       </motion.div>
+       <input
+diff --git a/src/components/scan/Viewfinder.tsx b/src/components/scan/Viewfinder.tsx
+index 039a6d1d..0d2234f2 100644
+--- a/src/components/scan/Viewfinder.tsx
++++ b/src/components/scan/Viewfinder.tsx
+@@ -1,4 +1,5 @@
+ import { useCallback, useEffect, useRef, useState } from "react";
++import { asset } from "@/lib/asset";
+ import Webcam from "react-webcam";
+ import { motion, AnimatePresence } from "framer-motion";
+ import { Flashlight, FlashlightOff, ImageUp, RefreshCw } from "lucide-react";
+@@ -157,7 +158,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
+         className="pointer-events-none absolute inset-0"
+         style={{
+           background:
+-            "radial-gradient(circle at center, transparent min(35vw, 30vh), rgb(var(--bg) / 0.55) calc(min(35vw, 30vh) + 2px))",
++            "radial-gradient(circle at center, transparent min(33vw, 25vh, 220px), rgb(var(--bg) / 0.55) calc(min(33vw, 25vh, 220px) + 2px))",
+         }}
+       />
+ 
+@@ -165,13 +166,13 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
+       <motion.div
+         aria-hidden
+         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+-        style={{ width: "min(72vw, 62vh)", height: "min(72vw, 62vh)" }}
++        style={{ width: "min(72vw, 54vh, 460px)", height: "min(72vw, 54vh, 460px)" }}
+         animate={{ opacity: [0.6, 0.85, 0.6] }}
+         transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+       >
+         {/* reeded outer ring */}
+         <SvgMask
+-          src="/reed-ring.svg"
++          src={asset("/reed-ring.svg")}
+           className={cn("absolute -inset-3 transition-colors duration-300", stable ? "text-patina" : "text-brass/60")}
+         />
+         {/* inner dashed circle → solid patina when stable */}
+@@ -227,7 +228,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
+       </AnimatePresence>
+ 
+       {/* corner controls */}
+-      <div className="absolute right-4 top-4 flex flex-col gap-2">
++      <div className="absolute right-3 top-16 flex flex-col gap-2 sm:right-4">
+         {torchSupported && (
+           <button
+             type="button"
+@@ -250,7 +251,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
+       </div>
+ 
+       {/* bottom cluster: caption + shutter + upload escape */}
+-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-4 bg-gradient-to-t from-bg/80 to-transparent px-6 pb-6 pt-10">
++      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2.5 bg-gradient-to-t from-bg/80 to-transparent px-4 pb-4 pt-8 sm:gap-4 sm:px-6 sm:pb-6 sm:pt-10">
+         <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-ink-dim">
+           {stable ? "Hold steady…" : "Align the coin"}
+         </p>
+diff --git a/src/lib/asset.ts b/src/lib/asset.ts
+new file mode 100644
+index 00000000..05eb0867
+--- /dev/null
++++ b/src/lib/asset.ts
+@@ -0,0 +1,18 @@
++/**
++ * Base-aware public-asset URL resolver.
++ *
++ * The app is deployed under a sub-path (GitHub Pages project site, e.g.
++ * https://<user>.github.io/CoinAtlas/) with Vite `base: "./"`. Hard-coded
++ * root-absolute paths like "/coins/x.jpg" escape that sub-path and 404 —
++ * so every public asset goes through `asset()`, which prefixes
++ * `import.meta.env.BASE_URL`. Data/blob/remote URLs pass through untouched,
++ * and it also normalises legacy root-absolute paths stored in IndexedDB by
++ * earlier versions.
++ */
++export function asset(p: string): string {
++  if (!p) return p;
++  if (/^(data:|blob:|https?:|mailto:)/i.test(p)) return p;
++  const base = import.meta.env.BASE_URL || "/";
++  const clean = p.replace(/^\/+/, "");
++  return (base.endsWith("/") ? base : base + "/") + clean;
++}
+diff --git a/src/lib/db.ts b/src/lib/db.ts
+index 3e511e18..7cec488e 100644
+--- a/src/lib/db.ts
++++ b/src/lib/db.ts
+@@ -1,4 +1,5 @@
+ import Dexie, { type Table } from "dexie";
++import { asset } from "@/lib/asset";
+ import type { Coin } from "@/types/coin";
+ 
+ /**
+@@ -67,8 +68,8 @@ export function buildSeedCoins(): Coin[] {
+           "Found in circulation in Lyon, 2019. First year of issue — honest wear but full legends; kept as the collection's first circulation find.",
+         tags: ["euro", "bimetallic"],
+         images: {
+-          obverse: "/coins/france-2-euro-1999-obverse.jpg",
+-          reverse: "/coins/france-2-euro-1999-reverse.jpg",
++          obverse: asset("/coins/france-2-euro-1999-obverse.jpg"),
++          reverse: asset("/coins/france-2-euro-1999-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — France 2 Euro 1999", url: "https://en.numista.com/catalogue/pieces1298.html" }],
+       },
+@@ -113,8 +114,8 @@ export function buildSeedCoins(): Coin[] {
+           "Cartwheel lustre both sides; light bag marks in the left obverse field keep it from a higher mint-state grade. The 1881-S is famously well struck.",
+         tags: ["silver", "dollar", "morgan"],
+         images: {
+-          obverse: "/coins/usa-morgan-dollar-1881-obverse.jpg",
+-          reverse: "/coins/usa-morgan-dollar-1881-reverse.jpg",
++          obverse: asset("/coins/usa-morgan-dollar-1881-obverse.jpg"),
++          reverse: asset("/coins/usa-morgan-dollar-1881-reverse.jpg"),
+         },
+         sources: [
+           { label: "PCGS CoinFacts — 1881-S $1", url: "https://www.pcgs.com/coinfacts/coin/1881-s-1/7130" },
+@@ -158,8 +159,8 @@ export function buildSeedCoins(): Coin[] {
+           "Attribution tentative — reverse legend partly flat. Compare RIC II.3 137 vs 267 (Pietas reverse); weight and style favour the Salus type. Awaiting review against OCRE plates.",
+         tags: ["ancient", "silver", "roman"],
+         images: {
+-          obverse: "/coins/roman-denarius-hadrian-obverse.jpg",
+-          reverse: "/coins/roman-denarius-hadrian-reverse.jpg",
++          obverse: asset("/coins/roman-denarius-hadrian-obverse.jpg"),
++          reverse: asset("/coins/roman-denarius-hadrian-reverse.jpg"),
+         },
+         sources: [
+           { label: "OCRE — Hadrian denarii", url: "https://numismatics.org/ocre/results?q=Hadrian+denarius" },
+@@ -204,8 +205,8 @@ export function buildSeedCoins(): Coin[] {
+           "Last year of the veiled-head type — Victoria died in January 1901. Traces of original mint red around the reverse legend.",
+         tags: ["bronze", "victoria"],
+         images: {
+-          obverse: "/coins/uk-penny-1901-obverse.jpg",
+-          reverse: "/coins/uk-penny-1901-reverse.jpg",
++          obverse: asset("/coins/uk-penny-1901-obverse.jpg"),
++          reverse: asset("/coins/uk-penny-1901-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — UK Penny 1901", url: "https://en.numista.com/catalogue/pieces794.html" }],
+       },
+@@ -246,8 +247,8 @@ export function buildSeedCoins(): Coin[] {
+           "Third-generation 500 yen with two-colour bimetallic cladding — picked from change at Haneda on the way home. Kept for the anti-counterfeit tech.",
+         tags: ["modern", "circulation", "bimetallic"],
+         images: {
+-          obverse: "/coins/japan-500-yen-2021-obverse.jpg",
+-          reverse: "/coins/japan-500-yen-2021-reverse.jpg",
++          obverse: asset("/coins/japan-500-yen-2021-obverse.jpg"),
++          reverse: asset("/coins/japan-500-yen-2021-reverse.jpg"),
+         },
+         sources: [{ label: "Japan Mint — 500 yen (new)", url: "https://www.mint.go.jp/eng/kids/eng_kids_500new.html" }],
+       },
+@@ -293,8 +294,8 @@ export function buildSeedCoins(): Coin[] {
+           "Even circulation wear, old light cleaning on the reverse. Confirm against Jäger 104 die varieties; edge lettering complete and upright.",
+         tags: ["silver", "empire", "german-states"],
+         images: {
+-          obverse: "/coins/germany-5-mark-1901-obverse.jpg",
+-          reverse: "/coins/germany-5-mark-1901-reverse.jpg",
++          obverse: asset("/coins/germany-5-mark-1901-obverse.jpg"),
++          reverse: asset("/coins/germany-5-mark-1901-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — Prussia 5 Mark 1901 A", url: "https://en.numista.com/catalogue/pieces6424.html" }],
+       },
+@@ -333,8 +334,8 @@ export function buildSeedCoins(): Coin[] {
+           "First year of the small cent — Canada shrank the cent from the large 25.4 mm format this year. Family provenance; never to be sold.",
+         tags: ["bronze", "george-v", "provenance"],
+         images: {
+-          obverse: "/coins/canada-1-cent-1920-obverse.jpg",
+-          reverse: "/coins/canada-1-cent-1920-reverse.jpg",
++          obverse: asset("/coins/canada-1-cent-1920-obverse.jpg"),
++          reverse: asset("/coins/canada-1-cent-1920-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — Canada 1 Cent 1920", url: "https://en.numista.com/catalogue/pieces2952.html" }],
+       },
+@@ -373,8 +374,8 @@ export function buildSeedCoins(): Coin[] {
+           "Classic “cap and rays” type struck continuously since 1823 — this coin format circulated worldwide and was legal tender in the US until 1857. Two old chop-like marks in the reverse field.",
+         tags: ["silver", "crown-size"],
+         images: {
+-          obverse: "/coins/mexico-8-reales-1894-obverse.jpg",
+-          reverse: "/coins/mexico-8-reales-1894-reverse.jpg",
++          obverse: asset("/coins/mexico-8-reales-1894-obverse.jpg"),
++          reverse: asset("/coins/mexico-8-reales-1894-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — Mexico 8 Reales 1894 Mo", url: "https://en.numista.com/catalogue/pieces12330.html" }],
+       },
+@@ -413,8 +414,8 @@ export function buildSeedCoins(): Coin[] {
+           "Australia's first commemorative coin, marking the opening of (Old) Parliament House. Most were spent; sharp examples are surprisingly scarce.",
+         tags: ["silver", "commemorative"],
+         images: {
+-          obverse: "/coins/australia-florin-1927-obverse.jpg",
+-          reverse: "/coins/australia-florin-1927-reverse.jpg",
++          obverse: asset("/coins/australia-florin-1927-obverse.jpg"),
++          reverse: asset("/coins/australia-florin-1927-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — Australia Florin 1927", url: "https://en.numista.com/catalogue/pieces5215.html" }],
+       },
+@@ -452,8 +453,8 @@ export function buildSeedCoins(): Coin[] {
+           "Struck in the year of independence — the last British-Indian rupee type before the 1950 Republic coinage. Bought deliberately on 15 August.",
+         tags: ["independence-era", "nickel"],
+         images: {
+-          obverse: "/coins/india-1-rupee-1947-obverse.jpg",
+-          reverse: "/coins/india-1-rupee-1947-reverse.jpg",
++          obverse: asset("/coins/india-1-rupee-1947-obverse.jpg"),
++          reverse: asset("/coins/india-1-rupee-1947-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — India 1 Rupee 1947", url: "https://en.numista.com/catalogue/pieces2565.html" }],
+       },
+@@ -492,8 +493,8 @@ export function buildSeedCoins(): Coin[] {
+           "From the first Olympic Games held in the Eastern Bloc; part of a six-coin commemorative rouble series. Mint-bloom intact.",
+         tags: ["commemorative", "olympics"],
+         images: {
+-          obverse: "/coins/ussr-1-rouble-1980-obverse.jpg",
+-          reverse: "/coins/ussr-1-rouble-1980-reverse.jpg",
++          obverse: asset("/coins/ussr-1-rouble-1980-obverse.jpg"),
++          reverse: asset("/coins/ussr-1-rouble-1980-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — USSR 1 Rouble 1980 Olympics", url: "https://en.numista.com/catalogue/pieces950.html" }],
+       },
+@@ -531,8 +532,8 @@ export function buildSeedCoins(): Coin[] {
+           "From a bulk world-coin lot; low-confidence auto-attribution — verify the 1976 date vs the near-identical 1978 and 1980 strikes.",
+         tags: ["modern", "world-lot"],
+         images: {
+-          obverse: "/coins/greece-10-drachma-1976-obverse.jpg",
+-          reverse: "/coins/greece-10-drachma-1976-reverse.jpg",
++          obverse: asset("/coins/greece-10-drachma-1976-obverse.jpg"),
++          reverse: asset("/coins/greece-10-drachma-1976-reverse.jpg"),
+         },
+         sources: [{ label: "Numista — Greece 10 Drachma 1976", url: "https://en.numista.com/catalogue/pieces2490.html" }],
+       },
+diff --git a/src/lib/identify.ts b/src/lib/identify.ts
+index 53f0fd7f..adab6b0d 100644
+--- a/src/lib/identify.ts
++++ b/src/lib/identify.ts
+@@ -20,6 +20,7 @@
+  */
+ 
+ import type { Coin } from "@/types/coin";
++import { asset } from "@/lib/asset";
+ 
+ /* ------------------------------------------------------------------ types */
+ 
+@@ -66,7 +67,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
+     // Same-origin only — data URLs and /coins/* paths need no CORS mode.
+     img.onload = () => resolve(img);
+     img.onerror = () => reject(new Error(`Could not load image: ${src.slice(0, 48)}…`));
+-    img.src = src;
++    img.src = asset(src);
+   });
+ }
+ 
+diff --git a/src/pages/About.tsx b/src/pages/About.tsx
+index 8c2992bc..5b89b801 100644
+--- a/src/pages/About.tsx
++++ b/src/pages/About.tsx
+@@ -1,4 +1,5 @@
+ import { useRef } from "react";
++import { asset } from "@/lib/asset";
+ import { Link } from "react-router-dom";
+ import gsap from "gsap";
+ import { ScrollTrigger } from "gsap/ScrollTrigger";
+@@ -69,7 +70,7 @@ function AboutHero() {
+       <div className="relative h-[46vh] min-h-[320px] overflow-hidden">
+         <img
+           ref={imgRef}
+-          src="/about-desk.jpg"
++          src={asset("/about-desk.jpg")}
+           alt="A collector's workbench — album, cotton gloves, magnifier, caliper, and loose coins on dark felt"
+           className="absolute inset-0 size-full object-cover will-change-transform"
+         />
+@@ -84,7 +85,7 @@ function AboutHero() {
+         <div
+           aria-hidden
+           className="absolute inset-0 opacity-[0.03]"
+-          style={{ backgroundImage: "url(/guilloche-pattern.svg)", backgroundSize: "480px 480px" }}
++          style={{ backgroundImage: `url(${asset("guilloche-pattern.svg")})`, backgroundSize: "480px 480px" }}
+         />
+       </div>
+ 
+@@ -232,7 +233,7 @@ function HowIdentification() {
+           <RevealItem key={step.title} className="relative">
+             <div className="card-hover h-full rounded-[12px] border border-line bg-bg-raised p-6 text-center">
+               <div className="relative mx-auto size-20">
+-                <SvgMask src="/reed-ring.svg" className="absolute inset-0 text-bronze/70" />
++                <SvgMask src={asset("/reed-ring.svg")} className="absolute inset-0 text-bronze/70" />
+                 <span className="absolute inset-3 flex items-center justify-center rounded-full border border-line bg-bg-inset">
+                   <step.icon className="size-6 text-brass" aria-hidden />
+                 </span>
+diff --git a/src/pages/Home.tsx b/src/pages/Home.tsx
+index 820f4a2a..b5081a71 100644
+--- a/src/pages/Home.tsx
++++ b/src/pages/Home.tsx
+@@ -1,4 +1,5 @@
+ import { useEffect, useMemo, useRef, useState } from "react";
++import { asset } from "@/lib/asset";
+ import { Link, useNavigate } from "react-router-dom";
+ import {
+   motion,
+@@ -49,7 +50,7 @@ function HeroCoin() {
+       {/* guilloché well */}
+       <div className="relative rounded-full bg-inset p-8 sm:p-10">
+         <SvgMask
+-          src="/guilloche-pattern.svg"
++          src={asset("/guilloche-pattern.svg")}
+           className="absolute inset-0 size-full rounded-full text-ink opacity-[0.05]"
+           style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
+         />
+@@ -84,7 +85,7 @@ function HeroCoin() {
+             >
+               <div className="coin-face">
+                 <img
+-                  src="/hero-coin-obverse.png"
++                  src={asset("/hero-coin-obverse.png")}
+                   alt="Obverse of a silver coin — laureate portrait in profile"
+                   className="aspect-square w-full select-none rounded-full object-cover shadow-[0_0_0_2px_rgb(var(--line-strong)/0.6)]"
+                   draggable={false}
+@@ -92,7 +93,7 @@ function HeroCoin() {
+               </div>
+               <div className="coin-face coin-face-back">
+                 <img
+-                  src="/hero-coin-reverse.png"
++                  src={asset("/hero-coin-reverse.png")}
+                   alt="Reverse of the same coin — eagle within a laurel wreath"
+                   className="aspect-square w-full select-none rounded-full object-cover shadow-[0_0_0_2px_rgb(var(--line-strong)/0.6)]"
+                   draggable={false}
+@@ -282,21 +283,21 @@ const HOWTO = [
+   {
+     n: "01",
+     title: "Scan",
+-    img: "/howto-scan.png",
++    img: asset("howto-scan.png"),
+     body: "The guided viewfinder aligns the coin and captures both sides in seconds.",
+     link: { label: "Try it", to: "/scan" },
+   },
+   {
+     n: "02",
+     title: "Identify",
+-    img: "/howto-identify.png",
++    img: asset("howto-identify.png"),
+     body: "Ranked candidates with confidence scores — confirm or correct the attribution.",
+     link: null,
+   },
+   {
+     n: "03",
+     title: "Catalogue",
+-    img: "/howto-catalogue.png",
++    img: asset("howto-catalogue.png"),
+     body: "Specs, mintage, grade, provenance — filed under its own accession number.",
+     link: null,
+   },
+@@ -517,7 +518,7 @@ function ClosingCta() {
+           <div className="relative overflow-hidden rounded-[16px] border border-line bg-inset px-8 py-20 text-center">
+             {/* rotating guilloché texture at 4% */}
+             <SvgMask
+-              src="/guilloche-pattern.svg"
++              src={asset("/guilloche-pattern.svg")}
+               className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 text-ink opacity-[0.04] motion-safe:animate-[spin_60s_linear_infinite]"
+               style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
+             />
+diff --git a/src/pages/Scan.tsx b/src/pages/Scan.tsx
+index a1421070..bb47bfad 100644
+--- a/src/pages/Scan.tsx
++++ b/src/pages/Scan.tsx
+@@ -1,4 +1,5 @@
+ import { useCallback, useEffect, useState } from "react";
++import { asset } from "@/lib/asset";
+ import { useNavigate } from "react-router-dom";
+ import { AnimatePresence, motion } from "framer-motion";
+ import { Camera, Check, Circle, Hand, History, ImageUp, Lock, ScanSearch, Sun, X } from "lucide-react";
+@@ -235,7 +236,7 @@ export default function Scan() {
+               animate={{ rotate: 0 }}
+               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+             >
+-              <SvgMask src="/reed-ring.svg" className="size-full animate-reed-spin" />
++              <SvgMask src={asset("/reed-ring.svg")} className="size-full animate-reed-spin" />
+             </motion.span>
+             <span aria-hidden className="absolute inset-2 rounded-full border border-dashed border-brass/50" />
+             <motion.span
+@@ -262,8 +263,8 @@ export default function Scan() {
+               variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
+               className="mt-3 max-w-[52ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim"
+             >
+-              We'll photograph both sides, then match them against the reference catalogue. You'll review everything
+-              before it's filed.
++              Photograph one or both sides of the coin, then match them against the reference catalogue. One side is
++              enough to search — and you'll review everything before it's filed.
+             </motion.p>
+ 
+             <motion.div
+@@ -334,16 +335,28 @@ export default function Scan() {
+           >
+             <div className="relative flex size-full flex-col overflow-hidden bg-inset lg:max-h-[84vh] lg:max-w-[720px] lg:rounded-[16px] lg:border lg:border-line">
+               {/* top bar */}
+-              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-bg/80 to-transparent px-4 py-3">
++              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 bg-gradient-to-b from-bg/80 to-transparent px-3 py-3 sm:px-4">
+                 {stepPills}
+-                <button
+-                  type="button"
+-                  onClick={requestClose}
+-                  aria-label="Close scan"
+-                  className="flex size-9 items-center justify-center rounded-full border border-line bg-bg/60 text-ink backdrop-blur transition-colors hover:border-line-strong"
+-                >
+-                  <X className="size-4" />
+-                </button>
++                <div className="flex items-center gap-2">
++                  {stage === "capture" && side === "reverse" && (
++                    <button
++                      type="button"
++                      onClick={() => setStage("confirm")}
++                      className="rounded-full border border-brass/50 bg-bg/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-brass backdrop-blur transition-colors hover:border-brass hover:bg-brass/10"
++                    >
++                      <span className="max-sm:hidden">Skip reverse — one side is enough</span>
++                      <span className="sm:hidden">Skip →</span>
++                    </button>
++                  )}
++                  <button
++                    type="button"
++                    onClick={requestClose}
++                    aria-label="Close scan"
++                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line bg-bg/60 text-ink backdrop-blur transition-colors hover:border-line-strong"
++                  >
++                    <X className="size-4" />
++                  </button>
++                </div>
+               </div>
+ 
+               <div className="relative flex-1">
+@@ -428,19 +441,6 @@ export default function Scan() {
+                 )}
+               </div>
+ 
+-              {/* skip-reverse escape */}
+-              {stage === "capture" && side === "reverse" && (
+-                <div className="absolute inset-x-0 bottom-24 z-10 flex justify-center">
+-                  <button
+-                    type="button"
+-                    onClick={() => setStage("confirm")}
+-                    className="rounded-full border border-line bg-bg/70 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-dim backdrop-blur transition-colors hover:border-line-strong hover:text-ink"
+-                  >
+-                    Skip — identify with obverse only
+-                  </button>
+-                </div>
+-              )}
+-
+               {/* close confirmation */}
+               <AnimatePresence>
+                 {confirmClose && (
+@@ -495,10 +495,10 @@ export default function Scan() {
+         <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-16 text-center">
+           <p className="overline-label">REVIEW YOUR CAPTURES</p>
+           <h1 className="mt-3 font-display text-[28px] font-semibold tracking-[-0.015em] text-ink md:text-[32px]">
+-            Both sides, ready for the loupe
++            {reverse ? "Both sides, ready for the loupe" : "One side captured — ready to identify"}
+           </h1>
+           <p className="mt-3 max-w-[52ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim">
+-            Tap a photo to retake that side — the other is kept.
++            Tap a photo to retake that side — or add the other side if you skipped it. One side is enough to identify.
+           </p>
+ 
+           <div className="mt-10 flex items-center justify-center gap-8 md:gap-14">
+-- 
+2.39.5
+

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
+import { asset } from "@/lib/asset";
 
 /**
  * CoinImage — the signature component (design.md §5).
@@ -18,8 +19,8 @@ export function SvgMask({ src, className, style }: { src: string; className?: st
       aria-hidden
       className={cn("inline-block shrink-0 bg-current", className)}
       style={{
-        WebkitMaskImage: `url("${src}")`,
-        maskImage: `url("${src}")`,
+        WebkitMaskImage: `url("${asset(src)}")`,
+        maskImage: `url("${asset(src)}")`,
         WebkitMaskSize: "contain",
         maskSize: "contain",
         WebkitMaskRepeat: "no-repeat",
@@ -36,7 +37,7 @@ export function SvgMask({ src, className, style }: { src: string; className?: st
 export function ReedRing({ className, spinning = true }: { className?: string; spinning?: boolean }) {
   return (
     <SvgMask
-      src="/reed-ring.svg"
+      src={asset("reed-ring.svg")}
       className={cn("pointer-events-none absolute -inset-2 text-brass", spinning && "animate-reed-spin", className)}
     />
   );
@@ -61,14 +62,14 @@ function Face({
           back && "coin-face-back",
         )}
       >
-        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
+        <SvgMask src={asset("empty-coin.svg")} className="size-1/2 opacity-60" />
       </div>
     );
   }
   return (
     <div className={cn("coin-face", back && "coin-face-back")}>
       <img
-        src={src}
+        src={asset(src)}
         alt={alt}
         loading="lazy"
         draggable={false}

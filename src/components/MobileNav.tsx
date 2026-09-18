@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BarChart3, BookOpen, Camera, Info, Layers, Menu, Moon, Plus, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { asset } from "@/lib/asset";
 import { useTheme } from "@/components/ThemeProvider";
 import { openPalette } from "@/lib/palette";
 import { SvgMask } from "@/components/coin/CoinImage";
@@ -43,10 +44,10 @@ export default function MobileNav() {
     <div className="lg:hidden">
       {/* Top bar */}
       <header className="fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-4 backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-2 text-brass" aria-label="Numisma — home">
-          <SvgMask src="/logo.svg" className="size-5" />
+        <a href="https://nasim-mahmud.github.io/CoinAtlas/" className="flex items-center gap-2 text-brass" aria-label="CoinAtlas — home">
+          <SvgMask src={asset("logo.svg")} className="size-5" />
           <span className="font-display text-[16px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
-        </Link>
+        </a>
         <div className="flex items-center gap-2">
           <button
             type="button"

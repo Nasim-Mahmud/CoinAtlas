@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { asset } from "@/lib/asset";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { SvgMask } from "@/components/coin/CoinImage";
@@ -22,7 +23,7 @@ export interface EmptyStateProps {
 export default function EmptyState({ headline, body, cta, secondaryCta, actions, className }: EmptyStateProps) {
   return (
     <div className={cn("flex flex-col items-center px-6 py-16 text-center", className)}>
-      <SvgMask src="/empty-coin.svg" className="size-32 text-ink-faint opacity-80" />
+      <SvgMask src={asset("/empty-coin.svg")} className="size-32 text-ink-faint opacity-80" />
       <h2 className="mt-6 font-display text-[22px] font-medium text-ink">{headline}</h2>
       {body && <p className="mt-2 max-w-[46ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim">{body}</p>}
       {actions ? (

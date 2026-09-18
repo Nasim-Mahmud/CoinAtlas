@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { asset } from "@/lib/asset";
 import { motion } from "framer-motion";
 import type { CoinFormValues } from "@/components/form/form-utils";
 import { COMPLETENESS_FIELDS, countFilled } from "@/components/form/form-utils";
@@ -65,7 +66,7 @@ export default function LabelPreview({ values, nextAccession }: { values: CoinFo
               />
             ) : (
               <div className="flex size-full items-center justify-center rounded-full border border-dashed border-line-strong bg-bg-inset/50">
-                <SvgMask src="/empty-coin.svg" className="size-10 text-ink-faint" />
+                <SvgMask src={asset("/empty-coin.svg")} className="size-10 text-ink-faint" />
               </div>
             )}
           </div>

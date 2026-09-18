@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { asset } from "@/lib/asset";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -95,7 +96,7 @@ export default function CabinetStory() {
         <div className="relative overflow-hidden rounded-[12px] border border-line">
           <img
             ref={imgRef}
-            src="/home-cabinet.jpg"
+            src={asset("/home-cabinet.jpg")}
             alt="Open walnut collector's cabinet drawer with coin trays in warm lamplight"
             className="aspect-[16/10] w-full object-cover will-change-transform lg:aspect-auto lg:h-[68vh]"
             loading="lazy"

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { asset } from "@/lib/asset";
 import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SvgMask } from "@/components/coin/CoinImage";
@@ -27,7 +28,7 @@ export default function Grading({ query }: { query: string }) {
       {/* Grading strip with hover stops */}
       <div className="relative mt-8">
         <SvgMask
-          src="/ref-grading-strip.svg"
+          src={asset("/ref-grading-strip.svg")}
           className="w-full text-bronze"
           style={{ aspectRatio: "5 / 1" }}
         />

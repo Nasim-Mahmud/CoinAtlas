@@ -66,7 +66,7 @@ export default function UploadWell({ onFiles, className }: UploadWellProps) {
         <p className="font-serif text-[16px] text-ink">Drop a photo or browse</p>
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">JPG · PNG · WEBP</p>
         <p className="mt-2 font-mono text-[11px] leading-relaxed text-ink-faint">
-          Pick two photos at once — they'll fill obverse then reverse.
+          One photo is enough — add a second and it'll fill the other side.
         </p>
       </motion.div>
       <input

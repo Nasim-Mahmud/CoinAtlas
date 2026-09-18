@@ -1,4 +1,5 @@
 import Dexie, { type Table } from "dexie";
+import { asset } from "@/lib/asset";
 import type { Coin } from "@/types/coin";
 
 /**
@@ -67,8 +68,8 @@ export function buildSeedCoins(): Coin[] {
           "Found in circulation in Lyon, 2019. First year of issue — honest wear but full legends; kept as the collection's first circulation find.",
         tags: ["euro", "bimetallic"],
         images: {
-          obverse: "/coins/france-2-euro-1999-obverse.jpg",
-          reverse: "/coins/france-2-euro-1999-reverse.jpg",
+          obverse: asset("/coins/france-2-euro-1999-obverse.jpg"),
+          reverse: asset("/coins/france-2-euro-1999-reverse.jpg"),
         },
         sources: [{ label: "Numista — France 2 Euro 1999", url: "https://en.numista.com/catalogue/pieces1298.html" }],
       },
@@ -113,8 +114,8 @@ export function buildSeedCoins(): Coin[] {
           "Cartwheel lustre both sides; light bag marks in the left obverse field keep it from a higher mint-state grade. The 1881-S is famously well struck.",
         tags: ["silver", "dollar", "morgan"],
         images: {
-          obverse: "/coins/usa-morgan-dollar-1881-obverse.jpg",
-          reverse: "/coins/usa-morgan-dollar-1881-reverse.jpg",
+          obverse: asset("/coins/usa-morgan-dollar-1881-obverse.jpg"),
+          reverse: asset("/coins/usa-morgan-dollar-1881-reverse.jpg"),
         },
         sources: [
           { label: "PCGS CoinFacts — 1881-S $1", url: "https://www.pcgs.com/coinfacts/coin/1881-s-1/7130" },
@@ -158,8 +159,8 @@ export function buildSeedCoins(): Coin[] {
           "Attribution tentative — reverse legend partly flat. Compare RIC II.3 137 vs 267 (Pietas reverse); weight and style favour the Salus type. Awaiting review against OCRE plates.",
         tags: ["ancient", "silver", "roman"],
         images: {
-          obverse: "/coins/roman-denarius-hadrian-obverse.jpg",
-          reverse: "/coins/roman-denarius-hadrian-reverse.jpg",
+          obverse: asset("/coins/roman-denarius-hadrian-obverse.jpg"),
+          reverse: asset("/coins/roman-denarius-hadrian-reverse.jpg"),
         },
         sources: [
           { label: "OCRE — Hadrian denarii", url: "https://numismatics.org/ocre/results?q=Hadrian+denarius" },
@@ -204,8 +205,8 @@ export function buildSeedCoins(): Coin[] {
           "Last year of the veiled-head type — Victoria died in January 1901. Traces of original mint red around the reverse legend.",
         tags: ["bronze", "victoria"],
         images: {
-          obverse: "/coins/uk-penny-1901-obverse.jpg",
-          reverse: "/coins/uk-penny-1901-reverse.jpg",
+          obverse: asset("/coins/uk-penny-1901-obverse.jpg"),
+          reverse: asset("/coins/uk-penny-1901-reverse.jpg"),
         },
         sources: [{ label: "Numista — UK Penny 1901", url: "https://en.numista.com/catalogue/pieces794.html" }],
       },
@@ -246,8 +247,8 @@ export function buildSeedCoins(): Coin[] {
           "Third-generation 500 yen with two-colour bimetallic cladding — picked from change at Haneda on the way home. Kept for the anti-counterfeit tech.",
         tags: ["modern", "circulation", "bimetallic"],
         images: {
-          obverse: "/coins/japan-500-yen-2021-obverse.jpg",
-          reverse: "/coins/japan-500-yen-2021-reverse.jpg",
+          obverse: asset("/coins/japan-500-yen-2021-obverse.jpg"),
+          reverse: asset("/coins/japan-500-yen-2021-reverse.jpg"),
         },
         sources: [{ label: "Japan Mint — 500 yen (new)", url: "https://www.mint.go.jp/eng/kids/eng_kids_500new.html" }],
       },
@@ -293,8 +294,8 @@ export function buildSeedCoins(): Coin[] {
           "Even circulation wear, old light cleaning on the reverse. Confirm against Jäger 104 die varieties; edge lettering complete and upright.",
         tags: ["silver", "empire", "german-states"],
         images: {
-          obverse: "/coins/germany-5-mark-1901-obverse.jpg",
-          reverse: "/coins/germany-5-mark-1901-reverse.jpg",
+          obverse: asset("/coins/germany-5-mark-1901-obverse.jpg"),
+          reverse: asset("/coins/germany-5-mark-1901-reverse.jpg"),
         },
         sources: [{ label: "Numista — Prussia 5 Mark 1901 A", url: "https://en.numista.com/catalogue/pieces6424.html" }],
       },
@@ -333,8 +334,8 @@ export function buildSeedCoins(): Coin[] {
           "First year of the small cent — Canada shrank the cent from the large 25.4 mm format this year. Family provenance; never to be sold.",
         tags: ["bronze", "george-v", "provenance"],
         images: {
-          obverse: "/coins/canada-1-cent-1920-obverse.jpg",
-          reverse: "/coins/canada-1-cent-1920-reverse.jpg",
+          obverse: asset("/coins/canada-1-cent-1920-obverse.jpg"),
+          reverse: asset("/coins/canada-1-cent-1920-reverse.jpg"),
         },
         sources: [{ label: "Numista — Canada 1 Cent 1920", url: "https://en.numista.com/catalogue/pieces2952.html" }],
       },
@@ -373,8 +374,8 @@ export function buildSeedCoins(): Coin[] {
           "Classic “cap and rays” type struck continuously since 1823 — this coin format circulated worldwide and was legal tender in the US until 1857. Two old chop-like marks in the reverse field.",
         tags: ["silver", "crown-size"],
         images: {
-          obverse: "/coins/mexico-8-reales-1894-obverse.jpg",
-          reverse: "/coins/mexico-8-reales-1894-reverse.jpg",
+          obverse: asset("/coins/mexico-8-reales-1894-obverse.jpg"),
+          reverse: asset("/coins/mexico-8-reales-1894-reverse.jpg"),
         },
         sources: [{ label: "Numista — Mexico 8 Reales 1894 Mo", url: "https://en.numista.com/catalogue/pieces12330.html" }],
       },
@@ -413,8 +414,8 @@ export function buildSeedCoins(): Coin[] {
           "Australia's first commemorative coin, marking the opening of (Old) Parliament House. Most were spent; sharp examples are surprisingly scarce.",
         tags: ["silver", "commemorative"],
         images: {
-          obverse: "/coins/australia-florin-1927-obverse.jpg",
-          reverse: "/coins/australia-florin-1927-reverse.jpg",
+          obverse: asset("/coins/australia-florin-1927-obverse.jpg"),
+          reverse: asset("/coins/australia-florin-1927-reverse.jpg"),
         },
         sources: [{ label: "Numista — Australia Florin 1927", url: "https://en.numista.com/catalogue/pieces5215.html" }],
       },
@@ -452,8 +453,8 @@ export function buildSeedCoins(): Coin[] {
           "Struck in the year of independence — the last British-Indian rupee type before the 1950 Republic coinage. Bought deliberately on 15 August.",
         tags: ["independence-era", "nickel"],
         images: {
-          obverse: "/coins/india-1-rupee-1947-obverse.jpg",
-          reverse: "/coins/india-1-rupee-1947-reverse.jpg",
+          obverse: asset("/coins/india-1-rupee-1947-obverse.jpg"),
+          reverse: asset("/coins/india-1-rupee-1947-reverse.jpg"),
         },
         sources: [{ label: "Numista — India 1 Rupee 1947", url: "https://en.numista.com/catalogue/pieces2565.html" }],
       },
@@ -492,8 +493,8 @@ export function buildSeedCoins(): Coin[] {
           "From the first Olympic Games held in the Eastern Bloc; part of a six-coin commemorative rouble series. Mint-bloom intact.",
         tags: ["commemorative", "olympics"],
         images: {
-          obverse: "/coins/ussr-1-rouble-1980-obverse.jpg",
-          reverse: "/coins/ussr-1-rouble-1980-reverse.jpg",
+          obverse: asset("/coins/ussr-1-rouble-1980-obverse.jpg"),
+          reverse: asset("/coins/ussr-1-rouble-1980-reverse.jpg"),
         },
         sources: [{ label: "Numista — USSR 1 Rouble 1980 Olympics", url: "https://en.numista.com/catalogue/pieces950.html" }],
       },
@@ -531,8 +532,8 @@ export function buildSeedCoins(): Coin[] {
           "From a bulk world-coin lot; low-confidence auto-attribution — verify the 1976 date vs the near-identical 1978 and 1980 strikes.",
         tags: ["modern", "world-lot"],
         images: {
-          obverse: "/coins/greece-10-drachma-1976-obverse.jpg",
-          reverse: "/coins/greece-10-drachma-1976-reverse.jpg",
+          obverse: asset("/coins/greece-10-drachma-1976-obverse.jpg"),
+          reverse: asset("/coins/greece-10-drachma-1976-reverse.jpg"),
         },
         sources: [{ label: "Numista — Greece 10 Drachma 1976", url: "https://en.numista.com/catalogue/pieces2490.html" }],
       },
