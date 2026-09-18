@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { asset } from "@/lib/asset";
 import {
   motion,
   useMotionValueEvent,
@@ -22,6 +21,15 @@ import { cn } from "@/lib/utils";
  * (pin-spacer) outside React and corrupts React 19 commits (insertBefore
  * NotFoundError → blank page) whenever a live query re-renders the tree.
  */
+
+/** Prefix a public/ asset with the Vite base URL (GitHub Pages subpath-safe). */
+function asset(p: string): string {
+  if (!p) return p;
+  if (/^(data:|blob:|https?:|mailto:)/i.test(p)) return p;
+  const base = import.meta.env.BASE_URL || "/";
+  const clean = p.replace(/^\/+/, "");
+  return (base.endsWith("/") ? base : base + "/") + clean;
+}
 
 interface Drawer {
   icon: LucideIcon;
