@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ---- NUMISMA tokens (design.md §2). RGB triplets for <alpha-value>. ---- */
+
+  /* Light theme — "Album" */
+  :root {
+    --bg: 243 236 221;
+    --bg-raised: 251 247 236;
+    --bg-inset: 234 225 205;
+    --line: 217 204 175;
+    --line-strong: 179 154 107;
+    --ink: 35 27 15;
+    --ink-dim: 92 81 56;
+    --ink-faint: 139 125 95;
+    --brass: 143 109 33;
+    --brass-bright: 168 127 43;
+    --bronze: 122 90 46;
+    --patina: 63 110 92;
+    --copper: 150 82 44;
+    --oxblood: 142 58 51;
+
+    /* shadcn/ui compat aliases */
+    --background: var(--bg);
+    --foreground: var(--ink);
+    --card: var(--bg-raised);
+    --card-foreground: var(--ink);
+    --popover: var(--bg-raised);
+    --popover-foreground: var(--ink);
+    --primary: var(--brass);
+    --primary-foreground: 251 247 236;
+    --secondary: var(--bg-raised);
+    --secondary-foreground: var(--ink);
+    --muted: var(--bg-inset);
+    --muted-foreground: var(--ink-dim);
+    --accent: var(--bg-inset);
+    --accent-foreground: var(--ink);
+    --destructive: var(--oxblood);
+    --destructive-foreground: 251 247 236;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--brass);
+    --radius: 0.625rem;
+  }
+
+  /* Dark theme — "Cabinet" (default) */
+  .dark {
+    --bg: 19 16 9;
+    --bg-raised: 27 22 15;
+    --bg-inset: 14 11 7;
+    --line: 46 38 26;
+    --line-strong: 74 60 38;
+    --ink: 237 228 210;
+    --ink-dim: 179 164 136;
+    --ink-faint: 124 111 87;
+    --brass: 201 162 75;
+    --brass-bright: 229 197 122;
+    --bronze: 138 106 59;
+    --patina: 95 143 126;
+    --copper: 176 102 58;
+    --oxblood: 164 68 60;
+
+    --background: var(--bg);
+    --foreground: var(--ink);
+    --card: var(--bg-raised);
+    --card-foreground: var(--ink);
+    --popover: var(--bg-raised);
+    --popover-foreground: var(--ink);
+    --primary: var(--brass);
+    --primary-foreground: 19 16 9;
+    --secondary: var(--bg-raised);
+    --secondary-foreground: var(--ink);
+    --muted: var(--bg-inset);
+    --muted-foreground: var(--ink-dim);
+    --accent: var(--bg-inset);
+    --accent-foreground: var(--ink);
+    --destructive: var(--oxblood);
+    --destructive-foreground: 237 228 210;
+    --border: var(--line);
+    --input: var(--line);
+    --ring: var(--brass);
+  }
+
+  html {
+    color-scheme: light;
+    scroll-behavior: auto; /* Lenis owns smooth scroll */
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-bg text-ink font-serif antialiased;
+    font-size: 16.5px;
+    line-height: 1.65;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: rgb(var(--brass) / 0.35);
+    color: rgb(var(--ink));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--brass));
+    outline-offset: 2px;
+  }
+
+  /* Guilloché page-background texture (design.md §4): ~4% opacity,
+     masked to fade toward the viewport edges. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("/guilloche-pattern.svg");
+    background-size: 480px 480px;
+    opacity: 0.045;
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 100%);
+  }
+
+  /* The typographic overline signature (design.md §3) */
+  .overline-label {
+    @apply font-mono uppercase text-ink-faint;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+  }
+
+  .spot-glow {
+    background: radial-gradient(closest-side, rgba(233, 197, 110, 0.10), transparent 70%);
+  }
+}
+
+@layer components {
+  /* ---- Coin flip (design.md §5 signature interaction) ---- */
+  .coin-flip-scene {
+    perspective: 900px;
+  }
+  .coin-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .coin-flip-inner.is-flipped {
+    transform: rotateY(180deg);
+  }
+  .coin-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .coin-face-back {
+    transform: rotateY(180deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coin-flip-inner {
+      transition: none;
+      transform: none !important;
+    }
+    .coin-face {
+      transition: opacity 0.3s ease;
+    }
+    .coin-flip-inner.is-flipped .coin-face-front {
+      opacity: 0;
+    }
+    .coin-flip-inner.is-flipped .coin-face-back {
+      opacity: 1;
+      transform: none;
+    }
+    .coin-flip-inner:not(.is-flipped) .coin-face-back {
+      opacity: 0;
+      transform: none;
+    }
+  }
+
+  /* Card hover: border brightens + soft brass glow (design.md §4) */
+  .card-hover {
+    @apply transition-all duration-150;
+  }
+  .card-hover:hover {
+    border-color: rgb(var(--line-strong));
+    box-shadow: 0 8px 30px -12px rgba(201, 162, 75, 0.25);
+    transform: translateY(-3px);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

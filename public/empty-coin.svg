@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" fill="none" stroke="currentColor" stroke-linecap="round">
+  <!-- Line-art empty coin tray slot -->
+  <circle cx="160" cy="160" r="96" stroke-width="2" stroke-dasharray="6 10" opacity="0.7" />
+  <circle cx="160" cy="160" r="72" stroke-width="1.5" opacity="0.45" />
+  <circle cx="160" cy="160" r="40" stroke-width="1.5" opacity="0.3" />
+  <!-- small sparkle -->
+  <g stroke-width="2" opacity="0.9">
+    <line x1="236" y1="66" x2="236" y2="90" />
+    <line x1="224" y1="78" x2="248" y2="78" />
+  </g>
+  <g stroke-width="1.5" opacity="0.5">
+    <line x1="84" y1="226" x2="84" y2="240" />
+    <line x1="77" y1="233" x2="91" y2="233" />
+  </g>
+</svg>

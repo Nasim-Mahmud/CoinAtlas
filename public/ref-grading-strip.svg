@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" fill="none" stroke="currentColor" stroke-linecap="round">
+  <!-- Grading scale strip: 6 coins wearing down left to right, G VG F VF EF UNC -->
+  <!-- baseline -->
+  <line x1="60" y1="170" x2="1140" y2="170" stroke-width="1.5" opacity="0.6" />
+
+  <!-- G: nearly smooth, heavy wear -->
+  <g stroke-width="1.5">
+    <circle cx="130" cy="110" r="48" />
+    <circle cx="130" cy="110" r="38" stroke-dasharray="3 6" opacity="0.35" />
+    <line x1="130" y1="170" x2="130" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="130" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">G</text>
+  </g>
+
+  <!-- VG: faint portrait outline -->
+  <g stroke-width="1.5">
+    <circle cx="322" cy="110" r="48" />
+    <circle cx="322" cy="110" r="38" opacity="0.4" />
+    <path d="M310 128 q-4 -26 12 -34 q14 -6 18 8 q3 12 -4 26" opacity="0.35" />
+    <line x1="322" y1="170" x2="322" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="322" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">VG</text>
+  </g>
+
+  <!-- F: portrait with major features -->
+  <g stroke-width="1.5">
+    <circle cx="514" cy="110" r="48" />
+    <circle cx="514" cy="110" r="38" opacity="0.55" />
+    <path d="M502 128 q-4 -26 12 -34 q14 -6 18 8 q3 12 -4 26" opacity="0.5" />
+    <path d="M500 96 q10 -10 24 -4" opacity="0.45" />
+    <line x1="514" y1="170" x2="514" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="514" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">F</text>
+  </g>
+
+  <!-- VF: clearer portrait, partial legend -->
+  <g stroke-width="1.5">
+    <circle cx="706" cy="110" r="48" />
+    <circle cx="706" cy="110" r="38" opacity="0.7" />
+    <path d="M694 128 q-4 -26 12 -34 q14 -6 18 8 q3 12 -4 26" opacity="0.65" />
+    <path d="M692 96 q10 -10 24 -4" opacity="0.6" />
+    <path d="M690 132 q16 8 32 0" opacity="0.5" />
+    <circle cx="706" cy="110" r="44" stroke-dasharray="2 8" opacity="0.5" />
+    <line x1="706" y1="170" x2="706" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="706" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">VF</text>
+  </g>
+
+  <!-- EF: sharp portrait, full legend ring -->
+  <g stroke-width="1.5">
+    <circle cx="898" cy="110" r="48" />
+    <circle cx="898" cy="110" r="38" opacity="0.85" />
+    <path d="M886 128 q-4 -26 12 -34 q14 -6 18 8 q3 12 -4 26" opacity="0.85" />
+    <path d="M884 96 q10 -10 24 -4" opacity="0.8" />
+    <path d="M882 132 q16 8 32 0" opacity="0.7" />
+    <path d="M912 92 q6 8 6 18" opacity="0.7" />
+    <circle cx="898" cy="110" r="44" stroke-dasharray="2 6" opacity="0.75" />
+    <line x1="898" y1="170" x2="898" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="898" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">EF</text>
+  </g>
+
+  <!-- UNC: full detail + reeded edge + mint luster sparkle -->
+  <g stroke-width="1.5">
+    <circle cx="1090" cy="110" r="48" />
+    <circle cx="1090" cy="110" r="38" />
+    <path d="M1078 128 q-4 -26 12 -34 q14 -6 18 8 q3 12 -4 26" />
+    <path d="M1076 96 q10 -10 24 -4" />
+    <path d="M1074 132 q16 8 32 0" />
+    <path d="M1104 92 q6 8 6 18" />
+    <circle cx="1090" cy="110" r="44" stroke-dasharray="1.5 4" />
+    <!-- reeded edge ticks -->
+    <g stroke-width="1">
+      <line x1="1090" y1="58" x2="1090" y2="64" />
+      <line x1="1127" y1="73" x2="1124" y2="78" />
+      <line x1="1127" y1="147" x2="1124" y2="142" />
+      <line x1="1090" y1="162" x2="1090" y2="156" />
+      <line x1="1053" y1="147" x2="1056" y2="142" />
+      <line x1="1053" y1="73" x2="1056" y2="78" />
+      <line x1="1142" y1="110" x2="1136" y2="110" />
+      <line x1="1038" y1="110" x2="1044" y2="110" />
+    </g>
+    <!-- luster sparkle -->
+    <g stroke-width="1.5">
+      <line x1="1122" y1="60" x2="1122" y2="72" />
+      <line x1="1116" y1="66" x2="1128" y2="66" />
+    </g>
+    <line x1="1090" y1="170" x2="1090" y2="188" stroke-width="1.5" opacity="0.6" />
+    <text x="1090" y="216" text-anchor="middle" font-family="monospace" font-size="20" fill="currentColor" stroke="none" letter-spacing="2">UNC</text>
+  </g>
+</svg>
