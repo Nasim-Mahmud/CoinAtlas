@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { asset } from "@/lib/asset";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -70,7 +69,7 @@ function AboutHero() {
       <div className="relative h-[46vh] min-h-[320px] overflow-hidden">
         <img
           ref={imgRef}
-          src={asset("/about-desk.jpg")}
+          src="/about-desk.jpg"
           alt="A collector's workbench — album, cotton gloves, magnifier, caliper, and loose coins on dark felt"
           className="absolute inset-0 size-full object-cover will-change-transform"
         />
@@ -85,7 +84,7 @@ function AboutHero() {
         <div
           aria-hidden
           className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: `url(${asset("guilloche-pattern.svg")})`, backgroundSize: "480px 480px" }}
+          style={{ backgroundImage: "url(/guilloche-pattern.svg)", backgroundSize: "480px 480px" }}
         />
       </div>
 
@@ -233,7 +232,7 @@ function HowIdentification() {
           <RevealItem key={step.title} className="relative">
             <div className="card-hover h-full rounded-[12px] border border-line bg-bg-raised p-6 text-center">
               <div className="relative mx-auto size-20">
-                <SvgMask src={asset("/reed-ring.svg")} className="absolute inset-0 text-bronze/70" />
+                <SvgMask src="/reed-ring.svg" className="absolute inset-0 text-bronze/70" />
                 <span className="absolute inset-3 flex items-center justify-center rounded-full border border-line bg-bg-inset">
                   <step.icon className="size-6 text-brass" aria-hidden />
                 </span>

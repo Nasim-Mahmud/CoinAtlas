@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { asset } from "@/lib/asset";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check, ChevronRight } from "lucide-react";
@@ -65,7 +64,7 @@ function CardCoin({ coin, size = "card" }: { coin: Coin; size?: "card" | "row" }
           back && "coin-face-back",
         )}
       >
-        <SvgMask src={asset("/empty-coin.svg")} className="size-1/2 opacity-60" />
+        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
       </div>
     );
 

@@ -1,4 +1,3 @@
-import { asset } from "@/lib/asset";
 import { Link } from "react-router-dom";
 import { Lock } from "lucide-react";
 import { useCoinCount } from "@/hooks/useCoins";
@@ -24,7 +23,7 @@ export default function Footer() {
         {/* 1 — wordmark + tagline */}
         <div>
           <Link to="/" className="flex items-center gap-2.5 text-brass">
-            <SvgMask src={asset("logo.svg")} className="size-6" />
+            <SvgMask src="/logo.svg" className="size-6" />
             <span className="font-display text-[18px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
           </Link>
           <p className="mt-3 max-w-[36ch] font-serif text-[15px] leading-[1.65] text-ink-dim">

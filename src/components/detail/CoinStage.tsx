@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { asset } from "@/lib/asset";
 import { animate, motion, useMotionValue, useReducedMotion } from "framer-motion";
 import type { PanInfo } from "framer-motion";
 import { FlipHorizontal2, ZoomIn } from "lucide-react";
@@ -33,7 +32,7 @@ function StageImage({
   if (!src || failed) {
     return (
       <div className={cn("flex items-center justify-center rounded-full bg-inset text-ink-faint", className)}>
-        <SvgMask src={asset("/empty-coin.svg")} className="size-1/2 opacity-60" />
+        <SvgMask src="/empty-coin.svg" className="size-1/2 opacity-60" />
       </div>
     );
   }
@@ -110,7 +109,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
         className="relative rounded-[16px] border border-line bg-inset p-8 sm:p-10"
       >
         <SvgMask
-          src={asset("/guilloche-pattern.svg")}
+          src="/guilloche-pattern.svg"
           className="pointer-events-none absolute inset-0 size-full rounded-[16px] text-ink opacity-[0.05]"
           style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
         />
@@ -227,7 +226,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
                   <img src={t.src} alt="" className="size-full object-cover" draggable={false} />
                 ) : (
                   <span className="grid size-full place-items-center bg-inset text-ink-faint">
-                    <SvgMask src={asset("/empty-coin.svg")} className="size-2/3 opacity-60" />
+                    <SvgMask src="/empty-coin.svg" className="size-2/3 opacity-60" />
                   </span>
                 )}
               </button>
@@ -267,7 +266,7 @@ export default function CoinStage({ coin }: { coin: Coin }) {
               />
             ) : (
               <div className="grid aspect-square w-full place-items-center rounded-full bg-bg-raised text-ink-faint">
-                <SvgMask src={asset("/empty-coin.svg")} className="size-1/3 opacity-60" />
+                <SvgMask src="/empty-coin.svg" className="size-1/3 opacity-60" />
               </div>
             )}
           </div>

@@ -20,7 +20,6 @@
  */
 
 import type { Coin } from "@/types/coin";
-import { asset } from "@/lib/asset";
 
 /* ------------------------------------------------------------------ types */
 
@@ -67,7 +66,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     // Same-origin only — data URLs and /coins/* paths need no CORS mode.
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error(`Could not load image: ${src.slice(0, 48)}…`));
-    img.src = asset(src);
+    img.src = src;
   });
 }
 

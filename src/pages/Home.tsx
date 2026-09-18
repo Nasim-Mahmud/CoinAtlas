@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { asset } from "@/lib/asset";
 import { Link, useNavigate } from "react-router-dom";
 import {
   motion,
@@ -50,7 +49,7 @@ function HeroCoin() {
       {/* guilloché well */}
       <div className="relative rounded-full bg-inset p-8 sm:p-10">
         <SvgMask
-          src={asset("/guilloche-pattern.svg")}
+          src="/guilloche-pattern.svg"
           className="absolute inset-0 size-full rounded-full text-ink opacity-[0.05]"
           style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
         />
@@ -85,7 +84,7 @@ function HeroCoin() {
             >
               <div className="coin-face">
                 <img
-                  src={asset("/hero-coin-obverse.png")}
+                  src="/hero-coin-obverse.png"
                   alt="Obverse of a silver coin — laureate portrait in profile"
                   className="aspect-square w-full select-none rounded-full object-cover shadow-[0_0_0_2px_rgb(var(--line-strong)/0.6)]"
                   draggable={false}
@@ -93,7 +92,7 @@ function HeroCoin() {
               </div>
               <div className="coin-face coin-face-back">
                 <img
-                  src={asset("/hero-coin-reverse.png")}
+                  src="/hero-coin-reverse.png"
                   alt="Reverse of the same coin — eagle within a laurel wreath"
                   className="aspect-square w-full select-none rounded-full object-cover shadow-[0_0_0_2px_rgb(var(--line-strong)/0.6)]"
                   draggable={false}
@@ -283,21 +282,21 @@ const HOWTO = [
   {
     n: "01",
     title: "Scan",
-    img: asset("howto-scan.png"),
+    img: "/howto-scan.png",
     body: "The guided viewfinder aligns the coin and captures both sides in seconds.",
     link: { label: "Try it", to: "/scan" },
   },
   {
     n: "02",
     title: "Identify",
-    img: asset("howto-identify.png"),
+    img: "/howto-identify.png",
     body: "Ranked candidates with confidence scores — confirm or correct the attribution.",
     link: null,
   },
   {
     n: "03",
     title: "Catalogue",
-    img: asset("howto-catalogue.png"),
+    img: "/howto-catalogue.png",
     body: "Specs, mintage, grade, provenance — filed under its own accession number.",
     link: null,
   },
@@ -518,7 +517,7 @@ function ClosingCta() {
           <div className="relative overflow-hidden rounded-[16px] border border-line bg-inset px-8 py-20 text-center">
             {/* rotating guilloché texture at 4% */}
             <SvgMask
-              src={asset("/guilloche-pattern.svg")}
+              src="/guilloche-pattern.svg"
               className="absolute left-1/2 top-1/2 size-[900px] -translate-x-1/2 -translate-y-1/2 text-ink opacity-[0.04] motion-safe:animate-[spin_60s_linear_infinite]"
               style={{ WebkitMaskSize: "480px", maskSize: "480px" }}
             />

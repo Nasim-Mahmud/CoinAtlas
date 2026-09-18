@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { asset } from "@/lib/asset";
 import Webcam from "react-webcam";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flashlight, FlashlightOff, ImageUp, RefreshCw } from "lucide-react";
@@ -158,7 +157,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at center, transparent min(33vw, 25vh, 220px), rgb(var(--bg) / 0.55) calc(min(33vw, 25vh, 220px) + 2px))",
+            "radial-gradient(circle at center, transparent min(35vw, 30vh), rgb(var(--bg) / 0.55) calc(min(35vw, 30vh) + 2px))",
         }}
       />
 
@@ -166,13 +165,13 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
       <motion.div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-        style={{ width: "min(72vw, 54vh, 460px)", height: "min(72vw, 54vh, 460px)" }}
+        style={{ width: "min(72vw, 62vh)", height: "min(72vw, 62vh)" }}
         animate={{ opacity: [0.6, 0.85, 0.6] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
       >
         {/* reeded outer ring */}
         <SvgMask
-          src={asset("/reed-ring.svg")}
+          src="/reed-ring.svg"
           className={cn("absolute -inset-3 transition-colors duration-300", stable ? "text-patina" : "text-brass/60")}
         />
         {/* inner dashed circle → solid patina when stable */}
@@ -228,7 +227,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
       </AnimatePresence>
 
       {/* corner controls */}
-      <div className="absolute right-3 top-16 flex flex-col gap-2 sm:right-4">
+      <div className="absolute right-4 top-4 flex flex-col gap-2">
         {torchSupported && (
           <button
             type="button"
@@ -251,7 +250,7 @@ export default function Viewfinder({ onCapture, onUploadInstead, hint, onCameraE
       </div>
 
       {/* bottom cluster: caption + shutter + upload escape */}
-      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-2.5 bg-gradient-to-t from-bg/80 to-transparent px-4 pb-4 pt-8 sm:gap-4 sm:px-6 sm:pb-6 sm:pt-10">
+      <div className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-4 bg-gradient-to-t from-bg/80 to-transparent px-6 pb-6 pt-10">
         <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-ink-dim">
           {stable ? "Hold steady…" : "Align the coin"}
         </p>

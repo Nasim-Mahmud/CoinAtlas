@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { asset } from "@/lib/asset";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Camera, Check, Circle, Hand, History, ImageUp, Lock, ScanSearch, Sun, X } from "lucide-react";
@@ -236,7 +235,7 @@ export default function Scan() {
               animate={{ rotate: 0 }}
               transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <SvgMask src={asset("/reed-ring.svg")} className="size-full animate-reed-spin" />
+              <SvgMask src="/reed-ring.svg" className="size-full animate-reed-spin" />
             </motion.span>
             <span aria-hidden className="absolute inset-2 rounded-full border border-dashed border-brass/50" />
             <motion.span
@@ -263,8 +262,8 @@ export default function Scan() {
               variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { duration: 0.5 } } }}
               className="mt-3 max-w-[52ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim"
             >
-              Photograph one or both sides of the coin, then match them against the reference catalogue. One side is
-              enough to search — and you'll review everything before it's filed.
+              We'll photograph both sides, then match them against the reference catalogue. You'll review everything
+              before it's filed.
             </motion.p>
 
             <motion.div
@@ -335,28 +334,16 @@ export default function Scan() {
           >
             <div className="relative flex size-full flex-col overflow-hidden bg-inset lg:max-h-[84vh] lg:max-w-[720px] lg:rounded-[16px] lg:border lg:border-line">
               {/* top bar */}
-              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 bg-gradient-to-b from-bg/80 to-transparent px-3 py-3 sm:px-4">
+              <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-bg/80 to-transparent px-4 py-3">
                 {stepPills}
-                <div className="flex items-center gap-2">
-                  {stage === "capture" && side === "reverse" && (
-                    <button
-                      type="button"
-                      onClick={() => setStage("confirm")}
-                      className="rounded-full border border-brass/50 bg-bg/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-brass backdrop-blur transition-colors hover:border-brass hover:bg-brass/10"
-                    >
-                      <span className="max-sm:hidden">Skip reverse — one side is enough</span>
-                      <span className="sm:hidden">Skip →</span>
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={requestClose}
-                    aria-label="Close scan"
-                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line bg-bg/60 text-ink backdrop-blur transition-colors hover:border-line-strong"
-                  >
-                    <X className="size-4" />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={requestClose}
+                  aria-label="Close scan"
+                  className="flex size-9 items-center justify-center rounded-full border border-line bg-bg/60 text-ink backdrop-blur transition-colors hover:border-line-strong"
+                >
+                  <X className="size-4" />
+                </button>
               </div>
 
               <div className="relative flex-1">
@@ -441,6 +428,19 @@ export default function Scan() {
                 )}
               </div>
 
+              {/* skip-reverse escape */}
+              {stage === "capture" && side === "reverse" && (
+                <div className="absolute inset-x-0 bottom-24 z-10 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setStage("confirm")}
+                    className="rounded-full border border-line bg-bg/70 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-dim backdrop-blur transition-colors hover:border-line-strong hover:text-ink"
+                  >
+                    Skip — identify with obverse only
+                  </button>
+                </div>
+              )}
+
               {/* close confirmation */}
               <AnimatePresence>
                 {confirmClose && (
@@ -495,10 +495,10 @@ export default function Scan() {
         <div className="mx-auto flex max-w-[640px] flex-col items-center px-4 py-16 text-center">
           <p className="overline-label">REVIEW YOUR CAPTURES</p>
           <h1 className="mt-3 font-display text-[28px] font-semibold tracking-[-0.015em] text-ink md:text-[32px]">
-            {reverse ? "Both sides, ready for the loupe" : "One side captured — ready to identify"}
+            Both sides, ready for the loupe
           </h1>
           <p className="mt-3 max-w-[52ch] font-serif text-[15.5px] leading-[1.65] text-ink-dim">
-            Tap a photo to retake that side — or add the other side if you skipped it. One side is enough to identify.
+            Tap a photo to retake that side — the other is kept.
           </p>
 
           <div className="mt-10 flex items-center justify-center gap-8 md:gap-14">

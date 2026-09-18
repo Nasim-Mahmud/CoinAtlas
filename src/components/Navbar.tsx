@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/ThemeProvider";
 import { useCoinCount } from "@/hooks/useCoins";
 import { openPalette } from "@/lib/palette";
-import { asset } from "@/lib/asset";
 import { pluralize } from "@/lib/format";
 import { SvgMask } from "@/components/coin/CoinImage";
 
@@ -76,10 +75,10 @@ export default function Navbar() {
     >
       <div className="mx-auto flex h-full max-w-[1240px] items-center justify-between gap-6 px-6">
         {/* Wordmark */}
-        <a href="https://nasim-mahmud.github.io/CoinAtlas/" className="flex items-center gap-2.5 text-brass" aria-label="CoinAtlas — home">
-          <SvgMask src={asset("logo.svg")} className="size-6" />
+        <Link to="/" className="flex items-center gap-2.5 text-brass" aria-label="Numisma — home">
+          <SvgMask src="/logo.svg" className="size-6" />
           <span className="font-display text-[18px] font-semibold tracking-[0.06em] text-ink">NUMISMA</span>
-        </a>
+        </Link>
 
         {/* Center nav */}
         <nav className="flex items-center gap-1" aria-label="Primary">
